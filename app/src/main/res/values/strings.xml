@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Big Dig</string>
+    <string name="sortByDate">Sort by date</string>
+    <string name="sortByStatus">Sort by status</string>
+</resources>

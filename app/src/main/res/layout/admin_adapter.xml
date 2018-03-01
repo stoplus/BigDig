@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!--Чтоб в CardView работали layout_margin для ListView, надо CardView поместить в FrameLayout-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.example.den.bigdig.MainActivity">
+
+    <TextView
+        android:id="@+id/idLink"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="Отчество"
+        android:textColor="@android:color/background_dark"
+        android:textSize="17sp" />
+
+</LinearLayout>
