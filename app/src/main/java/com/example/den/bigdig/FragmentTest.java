@@ -1,5 +1,6 @@
 package com.example.den.bigdig;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -25,18 +26,21 @@ public class FragmentTest extends Fragment {
             @Override
             public void onClick(View view) {
                 String linkText = editText.getText().toString();
-
-                if (android.util.Patterns.WEB_URL.matcher(linkText).matches()
-                        && linkText.matches(".*\\.(jpg|png|bmp|jpeg|gif)$")) {
-                    Intent intent = new Intent();
-                    intent.putExtra("AUTHORITY", ContractLinks.AUTHORITY);
-                    intent.putExtra("PATH", ContractLinks.PATH_LINKS_DATA);
-                    intent.putExtra("linkText", linkText);//передаем ссылку
-                    intent.setClassName("com.example1.den.bigdig2", "com.example1.den.bigdig2.App2");
-                    startActivity(intent);
-                    getActivity().finish();
-                } else
-                    Toast.makeText(getContext(), res.getString(R.string.enterUrlString), Toast.LENGTH_LONG).show();
+                try {
+                    if (android.util.Patterns.WEB_URL.matcher(linkText).matches()
+                            && linkText.matches(".*\\.(jpg|png|bmp|jpeg|gif)$")) {
+                        Intent intent = new Intent();
+                        intent.putExtra("AUTHORITY", ContractLinks.AUTHORITY);
+                        intent.putExtra("PATH", ContractLinks.PATH_LINKS_DATA);
+                        intent.putExtra("linkText", linkText);//передаем ссылку
+                        intent.setClassName("com.example1.den.bigdig2", "com.example1.den.bigdig2.App2");
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else
+                        Toast.makeText(getContext(), res.getString(R.string.enterUrlString), Toast.LENGTH_LONG).show();
+                }catch (ActivityNotFoundException e){
+                    Toast.makeText(getContext(), res.getString(R.string.installSecondApp), Toast.LENGTH_LONG).show();
+                }
             }
         });
         return view;
