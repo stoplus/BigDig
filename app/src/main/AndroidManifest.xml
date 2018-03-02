@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.den.bigdig">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <permission
         android:name="com.example.den.bigdig.LINKS_PROVIDER_PERMISSION"
         android:protectionLevel="normal" />
