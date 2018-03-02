@@ -1,5 +1,7 @@
 package com.example.den.bigdig;
 
+import android.content.res.Resources;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +15,15 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MenuItem itemSortByDate;
     private MenuItem itemSortByStatus;
+    private MyObserver observer;
+    private Resources res;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        res = getResources();//доступ к ресерсам
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,13 +36,13 @@ public class MainActivity extends AppCompatActivity {
                         if (itemSortByDate != null) {
                             itemSortByDate.setVisible(true);
                             itemSortByStatus.setVisible(true);
-                        }
+                        }//if
                         break;
                     default:
                         if (itemSortByDate != null) {
                             itemSortByDate.setVisible(false);
                             itemSortByStatus.setVisible(false);
-                        }
+                        }//if
                         break;
                 }//switch
             }//onTabSelected
@@ -53,11 +58,23 @@ public class MainActivity extends AppCompatActivity {
         setupViewPagerAdapter();
         setupViewPager();
         tabLayout.setupWithViewPager(viewPager, true);//прикрепляем ViewPager к TabLayout
-    }
+    }//onCreate
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        observer = new MyObserver(this, new Handler());
+        getContentResolver().registerContentObserver(FragmentListLinks.CONTENT_URI, true, observer);
+    }//onResume
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(observer);
+    }//onPause
 
     //-------------------------------------------------------------------------------------
     private void setupViewPagerAdapter() {
-        //передаем данные в страници (фрагменты) ViewPage
         //создаем фрагменты
         FragmentTest fragmentTest = new FragmentTest();
         FragmentListLinks fragmentListLinks = new FragmentListLinks();
@@ -65,22 +82,21 @@ public class MainActivity extends AppCompatActivity {
         //создаем адаптер для ViewPager
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         //добавляем страници и названия страниц в адаптер
-        adapter.addFragment(fragmentTest, "Тест");
-        adapter.addFragment(fragmentListLinks, "История");
+        adapter.addFragment(fragmentTest, res.getString(R.string.test));
+        adapter.addFragment(fragmentListLinks, res.getString(R.string.history));
     }//setupViewPagerAdapter
 
     //создаем и заполняем данными ViewPager
     public void setupViewPager() {
         viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);//присваиваем ViewPager адаптер
-        viewPager.setOffscreenPageLimit(2);
     }//setupViewPager
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);//закачиваем меню из xml
-        itemSortByDate = menu.findItem(R.id.mSortByDate); //определяем Item добавить
-        itemSortByStatus = menu.findItem(R.id.mSortByStatus);//определяем Item выход
+        itemSortByDate = menu.findItem(R.id.mSortByDate); //определяем Item mSortByDate
+        itemSortByStatus = menu.findItem(R.id.mSortByStatus);//определяем Item mSortByStatus
 
         return super.onCreateOptionsMenu(menu);
     }//onCreateOptionsMenu
@@ -99,4 +115,4 @@ public class MainActivity extends AppCompatActivity {
         }//switch
         return super.onOptionsItemSelected(item);
     }//onOptionsItemSelected
-}
+}// class MainActivity

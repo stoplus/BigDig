@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SqliteDatabaseManager extends SQLiteOpenHelper {
 
-
     public SqliteDatabaseManager(Context context) {
         super(context, ContractLinks.DATABASE_NAME, null, ContractLinks.DATABASE_VERSION);
     }
@@ -34,12 +33,12 @@ public class SqliteDatabaseManager extends SQLiteOpenHelper {
                 + ContractLinks.Links.TIME + " TIME NOT NULL"
                 + ")";
         db.execSQL(CREATE_LINK_DATA_TABLE);
-    }
+    }//onCreate
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ContractLinks.Links.TABLE_NAME_STATUS);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ContractLinks.Links.TABLE_NAME_LINK_DATA);
         onCreate(sqLiteDatabase);
-    }
-}
+    }//onUpgrade
+}//class SqliteDatabaseManager

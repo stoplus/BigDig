@@ -10,13 +10,13 @@
 
     <TextView
         android:id="@+id/idLink"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         android:singleLine="true"
-        android:text="Отчество"
         android:textColor="@android:color/background_dark"
         android:textSize="17sp" />
 

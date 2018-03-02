@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class AdapterForLinks extends RecyclerView.Adapter<AdapterForLinks.ViewHolder> {
     private LayoutInflater inflater;    // для загрузки разметки элемента
     private List<LinkObject> listLinks;    // коллекция выводимых данных
-    boolean flagSort = true;
+    private boolean flagSort = true;
 
     public AdapterForLinks(Context context, List<LinkObject> listLinks) {
         this.inflater = LayoutInflater.from(context);
@@ -49,14 +48,13 @@ public class AdapterForLinks extends RecyclerView.Adapter<AdapterForLinks.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.admin_adapter, parent, false);
+        View view = inflater.inflate(R.layout.link_adapter, parent, false);
         return new ViewHolder(view);
     } // onCreateViewHolder
 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
         // связать отображаемые элементы и значения полей
         holder.name.setText(listLinks.get(position).getName());
         switch (listLinks.get(position).getStatus()) {
@@ -72,21 +70,27 @@ public class AdapterForLinks extends RecyclerView.Adapter<AdapterForLinks.ViewHo
         }
     }//onBindViewHolder
 
-    public void sortByDate(){
+    //--------------------------------------------------------------------------------------------------
+    public void sortByDate() {
         Collections.sort(listLinks, LinkObject.COMPARE_BY_DATE);
         if (flagSort) {
             Collections.reverse(listLinks);
         }
         flagSort = !flagSort;//реверс
         notifyDataSetChanged();
-    }
+    }//sortByDate
 
-    public void sortByStatus(){
+    public void sortByStatus() {
         Collections.sort(listLinks, LinkObject.COMPARE_BY_STATUS);
         if (flagSort) {
             Collections.reverse(listLinks);
         }
         flagSort = !flagSort;//реверс
         notifyDataSetChanged();
-    }
-}
+    }//sortByStatus
+
+    public void notifyList(List<LinkObject> newListLinks) {
+        listLinks = newListLinks;
+        notifyDataSetChanged();
+    }//notifyList
+}//class AdapterForLinks

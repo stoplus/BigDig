@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-public class LinksProvider extends ContentProvider{
+public class LinksProvider extends ContentProvider {
 
     private SqliteDatabaseManager dbManager;
 
@@ -33,7 +33,7 @@ public class LinksProvider extends ContentProvider{
     public boolean onCreate() {
         dbManager = new SqliteDatabaseManager(getContext());
         return false;
-    }
+    }//onCreate
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public class LinksProvider extends ContentProvider{
         SQLiteDatabase db = dbManager.getWritableDatabase();
         Cursor mCursor = null;
 
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case 1:
                 mCursor = db.query(ContractLinks.Links.TABLE_NAME_LINK_DATA, projections, selection, selectionArgs, null, null, null);
                 break;
@@ -59,46 +59,46 @@ public class LinksProvider extends ContentProvider{
             default:
                 Toast.makeText(getContext(), "Invalid content uri", Toast.LENGTH_LONG).show();
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
-        }
+        }//switch
         mCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return mCursor;
-    }
+    }//query
 
     @Nullable
     @Override
-    public String getType(Uri uri) {
-        switch (sUriMatcher.match(uri)){
+    public String getType(@NonNull Uri uri) {
+        switch (sUriMatcher.match(uri)) {
             case 1:
-                return ContractLinks.CONTENT_DICTIONARY_LIST;
+                return ContractLinks.CONTENT_LINKS_LIST;
             case 2:
-                return ContractLinks.CONTENT_DICTIONARY_ITEM;
+                return ContractLinks.CONTENT_LINKS_ITEM;
             default:
                 throw new IllegalArgumentException("Unknown Uri: " + uri);
-        }
-    }
+        }//switch
+    }//getType
 
     @Nullable
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, ContentValues contentValues) {
         SQLiteDatabase db = dbManager.getWritableDatabase();
 
-        if(sUriMatcher.match(uri) != 1) {
+        if (sUriMatcher.match(uri) != 1) {
             throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         long rowId = db.insert(ContractLinks.Links.TABLE_NAME_LINK_DATA, null, contentValues);
-        if(rowId > 0) {
+        if (rowId > 0) {
             Uri articleUri = ContentUris.withAppendedId(ContractLinks.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(articleUri, null);
             return articleUri;
-        }
+        }//if
         throw new IllegalArgumentException("Unknown URI: " + uri);
-    }
+    }//insert
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = dbManager.getWritableDatabase();
         int count = 0;
-        switch(sUriMatcher.match(uri)) {
+        switch (sUriMatcher.match(uri)) {
             case 1:
                 count = db.delete(ContractLinks.Links.TABLE_NAME_LINK_DATA, selection, selectionArgs);
                 break;
@@ -109,31 +109,28 @@ public class LinksProvider extends ContentProvider{
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
-        }
-
+        }//switch
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
-    }
+    }//delete
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         SQLiteDatabase db = dbManager.getWritableDatabase();
         int count = 0;
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case 1:
                 count = db.update(ContractLinks.Links.TABLE_NAME_LINK_DATA, contentValues, selection, selectionArgs);
                 break;
-
             case 2:
                 String rowId = uri.getPathSegments().get(1);
                 count = db.update(ContractLinks.Links.TABLE_NAME_LINK_DATA, contentValues, ContractLinks.Links.ID + " = " + rowId +
                         (!TextUtils.isEmpty(selection) ? " AND (" + ")" : ""), selectionArgs);
                 break;
-
             default:
-                throw new IllegalArgumentException("Unknown Uri: " + uri );
-        }
+                throw new IllegalArgumentException("Unknown Uri: " + uri);
+        }//switch
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
-    }
-}
+    }//update
+}//class LinksProvider

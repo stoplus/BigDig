@@ -2,6 +2,7 @@ package com.example.den.bigdig;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,17 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class FragmentListLinks extends Fragment {
     public static final String AUTHORITY = "com.example.den.bigdig.Links";
     public static final String PATH = "/links_data";
-    private static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + PATH);
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + PATH);
     private List<LinkObject> links;
     public static AdapterForLinks adapter;
+    private Resources res;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,22 +30,10 @@ public class FragmentListLinks extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.idRecyclerViewLinks);
         Context context = getContext();
 
-        Cursor mCursor = getActivity().getContentResolver().query(CONTENT_URI, null, null, null, null, null);
-        links = new ArrayList<>();
-        if (mCursor.moveToFirst()) {
-            do {
-                String id = mCursor.getString(0);
-                String link = mCursor.getString(1);
-                int status = mCursor.getInt(2);
-                String time = mCursor.getString(3);
-                links.add(new LinkObject(id, link, time, status));
-            } while (mCursor.moveToNext());
-            adapter = new AdapterForLinks(context, links);//адаптер для ресайклера
-            recyclerView.setAdapter(adapter);//подсоединяем адаптер к ресайклеру
-        } else {
-            Toast.makeText(getContext(), "Nothing is inside the cursor ", Toast.LENGTH_LONG).show();
-        }
-        mCursor.close();
+        links = createListLinks(context);
+
+        adapter = new AdapterForLinks(context, links);//адаптер для ресайклера
+        recyclerView.setAdapter(adapter);//подсоединяем адаптер к ресайклеру
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -59,7 +47,7 @@ public class FragmentListLinks extends Fragment {
                         intent.putExtra("linkText", links.get(position).getName());//передаем ссылку
                         intent.putExtra("AUTHORITY", ContractLinks.AUTHORITY);
                         intent.putExtra("PATH", ContractLinks.PATH_LINKS_DATA);
-                        intent.setClassName("com.example1.den.bigdig2", "com.example1.den.bigdig2.MainActivity");
+                        intent.setClassName("com.example1.den.bigdig2", "com.example1.den.bigdig2.App2");
                         startActivity(intent);
                         getActivity().finish();
                     }//onItemClick
@@ -74,32 +62,22 @@ public class FragmentListLinks extends Fragment {
     }//onCreateView
 
     //===========================================================================================//
-//    private void editDataPerson(String editPersonId) {
-//        Intent intent = new Intent(context, AddEditUser.class);
-//        intent.putExtra("editPersonId", editPersonId);  // в активность передаем _id
-//        startActivityForResult(intent, REQEST_EDIT);//запуск активности с ожидание результата
-//    }//editDataPerson
-//
-//    //обработка КОНТЕКТСНОГО меню
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode == RESULT_CANCELED) return;
-//        switch (requestCode) {
-//            case REQEST_EDIT:
-//                flagUpdateList = true;//разрешаем обновить список
-//                Utils.setToast(context, "Данные изменены");
-//        }//switch
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }//onActivityResult
-
-    //================================================================================================
-    //сохраняем данные при повороте экрана
-    public void onSaveInstanceState(Bundle outState) {
-//        Log.d(LOG_FLAG, "onSaveInstanceState");
-//        outState.putBoolean("flagUpdate", flagUpdate);//при пересоздании страници, для продолжения работы кружка-анимации при обновлении списка
-//        outState.putBoolean("flagDel", flagDel);//при пересоздании страници, для продолжения работы кружка-анимации при удалении
-//        outState.putInt("hashCodeViewPager", hashCodeViewPager);//при пересоздании страници, сохраняем хешкод viewPager
-        super.onSaveInstanceState(outState);
-    }//onSaveInstanceState
-
+    public List<LinkObject> createListLinks(Context context) {
+        List<LinkObject> links = new ArrayList<>();
+        Cursor mCursor = context.getContentResolver().query(CONTENT_URI, null, null, null, null, null);
+        if (mCursor.moveToFirst()) {
+            do {
+                String id = mCursor.getString(0);
+                String link = mCursor.getString(1);
+                int status = mCursor.getInt(2);
+                String time = mCursor.getString(3);
+                links.add(new LinkObject(id, link, time, status));
+            } while (mCursor.moveToNext());
+        } else {
+            res = context.getResources();//доступ к ресерсам
+            Toast.makeText(context, res.getString(R.string.listLinksEmpty), Toast.LENGTH_LONG).show();
+        }
+        mCursor.close();
+        return links;
+    }//createListLinks
 }//class FragmentListLinks

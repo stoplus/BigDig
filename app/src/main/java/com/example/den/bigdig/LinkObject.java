@@ -2,11 +2,8 @@ package com.example.den.bigdig;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.design.widget.CoordinatorLayout;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Created by den on 23.02.2018.
@@ -18,14 +15,13 @@ public class LinkObject implements Parcelable {
     private String time;
     private int status;
 
-
     public LinkObject(String id, String name, String time, int status) {
         this.id = id;
         this.name = name;
         this.time = time;
         this.status = status;
+    }//LinkObject
 
-    }
     public String getId() {
         return id;
     }
@@ -70,14 +66,14 @@ public class LinkObject implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(time);
         parcel.writeInt(status);
-    }
+    }//writeToParcel
 
     protected LinkObject(Parcel in) {
         id = in.readString();
         name = in.readString();
         time = in.readString();
         status = in.readInt();
-    }
+    }//LinkObject
 
     public static final Creator<LinkObject> CREATOR = new Creator<LinkObject>() {
         @Override
@@ -102,6 +98,6 @@ public class LinkObject implements Parcelable {
         @Override
         public int compare(LinkObject s1, LinkObject s2) {
             return (s1.getTime()).compareTo(s2.getTime());//реверс сортировки
-        }
+        }//compare
     };
-}
+}//class LinkObject

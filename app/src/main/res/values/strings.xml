@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Big Dig</string>
-    <string name="sortByDate">Sort by date</string>
-    <string name="sortByStatus">Sort by status</string>
+    <string name="sortByDate">Сортировать по дате</string>
+    <string name="sortByStatus">Сортировать по статусу</string>
+    <string name="listLinksEmpty">Список ссылок пустой</string>
+    <string name="enterUrlString">Введите Url ссылку!!!</string>
+    <string name="test">Тест</string>
+    <string name="history">История</string>
+    <string name="ok">OK</string>
+    <string name="enterLink">Введите ссылку на картинку</string>
 </resources>
